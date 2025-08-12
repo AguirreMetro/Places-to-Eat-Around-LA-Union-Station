@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>LA Union Station • Lunch Guide</title>
+<style>
+  :root{
+    --bg:#F6F8FB; --card:#FFFFFF; --ink:#1A202C; --muted:#4A5568;
+    --line:#E2E8F0; --rowA:#FFFFFF; --rowB:#F1F4F8; --accent:#0F62FE;
+  }
+  html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif}
+  .bar{background:var(--accent);color:#fff;padding:14px 20px;font-weight:700}
+  .wrap{max-width:1080px;margin:20px auto;padding:0 16px}
+  h1{margin:10px 0 6px;font-size:28px}
+  .sub{color:var(--muted);font-size:14px;margin-bottom:14px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .row{display:grid;grid-template-columns:92px 1fr 2fr;gap:16px;align-items:center;padding:14px 16px}
+  .row:nth-child(odd){background:var(--rowA)}
+  .row:nth-child(even){background:var(--rowB)}
+  .qr{width:72px;height:72px;border-radius:10px;border:1px solid var(--line);object-fit:cover;background:#fff}
+  .title{font-weight:700}
+  .details{font-size:14px;color:#2D3748}
+  .k{font-weight:700;color:var(--muted)}
+  .stack > div{margin:2px 0}
+  .meta{display:flex;flex-wrap:wrap;gap:10px;color:#2D3748}
+  .sep{opacity:.55}
+  .hdr{display:flex;justify-content:space-between;align-items:center}
+  .ver{color:#dbe7ff;font-size:12px}
+  @media (max-width:820px){
+    .row{grid-template-columns:72px 1fr;grid-template-areas:"qr title" "qr details"}
+    .title{grid-area:title}
+    .details{grid-area:details}
+  }
+</style>
+</head>
+<body>
+  <div class="bar">
+    <div class="hdr wrap">
+      <div>LA Union Station • Lunch Guide</div>
+      <div class="ver">v1.2</div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <h1>Recommended Lunch Spots</h1>
+    <div class="sub">Scan a QR to open Yelp. Order of details: Type, Description, Closest Metro, Walk distance/time, Drive time.</div>
+
+    <div id="list" class="card"></div>
+
+    <p class="sub" style="margin-top:10px">
+      Notes: Miles are from Union Station. If a walk time is shown, it’s from the closest Metro station to the destination.
+    </p>
+  </div>
+
+<script>
+const spots = [
+  {name:"City Hall Farmers Market", type:"Various cuisines", desc:"Outdoor market with BBQ, Thai, and Mexican vendors. Wednesdays only.", metro:"Civic Center / Grand Park Station", miles:"1 mile", walk:"15 min walk", drive:"N/A"},
+  {name:"Whole Foods", type:"Healthy / Grocery", desc:"Grocery store with salad bar, hot food, and fresh options.", metro:"7th Street / Metro Center", miles:"1 mile", walk:"N/A", drive:"5 min drive"},
+  {name:"Zankou Chicken", type:"Mediterranean", desc:"Famous for Mediterranean chicken plates and wraps.", metro:"7th Street / Metro Center", miles:"1.2 miles", walk:"N/A", drive:"6 min drive"},
+  {name:"Jollibee", type:"Filipino Fast Food", desc:"Fried chicken, spaghetti, and more.", metro:"7th Street / Metro Center", miles:"1.2 miles", walk:"N/A", drive:"6 min drive"},
+  {name:"Chick-fil-A", type:"Fast Food", desc:"Chicken sandwiches and nuggets.", metro:"7th Street / Metro Center", miles:"1.2 miles", walk:"N/A", drive:"6 min drive"},
+  {name:"Mendocino Farms", type:"Sandwiches", desc:"Upscale sandwich shop with fresh ingredients.", metro:"7th Street / Metro Center", miles:"1.2 miles", walk:"N/A", drive:"6 min drive"},
+  {name:"MWD Cafeteria", type:"Cafeteria", desc:"Casual cafeteria with a variety of options.", metro:"Civic Center / Grand Park Station", miles:"0.8 miles", walk:"N/A", drive:"4 min drive"},
+  {name:"Kyla's Mexican Food", type:"Mexican", desc:"Local Mexican eatery serving tacos, burritos, and more.", metro:"Civic Center / Grand Park Station", miles:"1 mile", walk:"N/A", drive:"5 min drive"},
+  {name:"Al & Bea’s", type:"Mexican", desc:"Classic spot famous for bean and cheese burritos.", metro:"Mariachi Plaza Station", miles:"1.4 miles", walk:"N/A", drive:"7 min drive"},
+  {name:"Thai Deli", type:"Thai", desc:"Authentic Thai dishes in a casual setting.", metro:"Little Tokyo / Arts District Station", miles:"1.5 miles", walk:"N/A", drive:"8 min drive"},
+  {name:"King Taco", type:"Mexican", desc:"Popular chain with tacos, burritos, and tamales.", metro:"Mariachi Plaza Station", miles:"1.4 miles", walk:"N/A", drive:"7 min drive"},
+  {name:"Rice & Nori", type:"Japanese", desc:"Japanese rice balls and bento boxes.", metro:"Little Tokyo / Arts District Station", miles:"1.2 miles", walk:"N/A", drive:"6 min drive"},
+  {name:"Archives of US Café", type:"Café", desc:"Museum café with light bites, coffee, and pastries.", metro:"Civic Center / Grand Park Station", miles:"N/A", walk:"10 min walk", drive:"N/A"},
+  {name:"Woori Market", type:"Korean", desc:"Asian grocery with prepared Korean meals.", metro:"Little Tokyo / Arts District Station", miles:"1.6 miles", walk:"N/A", drive:"8 min drive"},
+  {name:"Bay Cities Deli", type:"Italian Deli", desc:"Famous for massive Italian sandwiches.", metro:"N/A", miles:"12 miles", walk:"N/A", drive:"Too far for walking, ~20 min drive"},
+  {name:"Mr. Churro", type:"Desserts / Mexican", desc:"Churros, smoothies, and tacos.", metro:"Union Station", miles:"1 mile", walk:"N/A", drive:"5 min drive"},
+  {name:"California Endowment Cafeteria", type:"Cafeteria", desc:"On-site cafeteria with rotating menu.", metro:"Union Station", miles:"0.8 miles", walk:"N/A", drive:"4 min drive"},
+  {name:"Grand Central Market", type:"Food Hall", desc:"Historic food hall with diverse food vendors.", metro:"Pershing Square Station", miles:"1 mile", walk:"N/A", drive:"5 min drive"},
+  {name:"Little Jewel", type:"Cajun / Creole", desc:"New Orleans–style deli and grocery.", metro:"Chinatown Station", miles:"1 mile", walk:"N/A", drive:"5 min drive"},
+  {name:"Wokcano", type:"Asian Fusion", desc:"Sushi, noodles, and Asian fusion plates.", metro:"Pershing Square Station", miles:"1.2 miles", walk:"N/A", drive:"6 min drive"},
+  {name:"Bottega Louie", type:"Italian", desc:"Upscale Italian restaurant and bakery.", metro:"Pershing Square Station", miles:"1.3 miles", walk:"N/A", drive:"6 min drive"},
+  {name:"Taco Bell Cantina", type:"Fast Food", desc:"Taco Bell with alcohol and expanded menu.", metro:"Pershing Square Station", miles:"1.2 miles", walk:"N/A", drive:"6 min drive"},
+  {name:"Lala’s Argentine Grill", type:"Argentine", desc:"Steak, empanadas, and salads.", metro:"Westlake / MacArthur Park Station", miles:"2 miles", walk:"N/A", drive:"10 min drive"},
+  {name:"Spitz", type:"Mediterranean", desc:"Mediterranean street food with wraps, bowls, and craft beer.", metro:"Little Tokyo / Arts District Station", miles:"1.2 miles", walk:"N/A", drive:"6 min drive"},
+];
+
+function yelpSearchURL(name){
+  // Yelp search pointing to Los Angeles; easy to replace with exact business URLs later
+  const q = encodeURIComponent(name + " Los Angeles");
+  return `https://www.yelp.com/search?find_desc=${q}`;
+}
+
+function qrSrc(url){
+  const u = encodeURIComponent(url);
+  // Simple QR image service; replace with your own generator if needed
+  return `https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${u}`;
+}
+
+function rowHTML(s){
+  const yelp = yelpSearchURL(s.name);
+  return `
+    <div class="row">
+      <img class="qr" alt="QR to Yelp: ${s.name}" src="${qrSrc(yelp)}" />
+      <div class="title">${s.name}</div>
+      <div class="details">
+        <div class="stack">
+          <div><span class="k">Type:</span> ${s.type}</div>
+          <div>${s.desc}</div>
+          <div><span class="k">Closest Metro:</span> ${s.metro || "N/A"}</div>
+          <div class="meta">
+            <div><span class="k">Walk:</span> ${[s.miles ? (s.miles + " from Union Station") : null, s.walk && s.walk!=="N/A" ? s.walk : null].filter(Boolean).join(" | ") || "N/A"}</div>
+            <span class="sep">|</span>
+            <div><span class="k">Drive:</span> ${s.drive || "N/A"}</div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
+document.getElementById("list").innerHTML =
+  spots
+    .slice()
+    .sort((a,b)=>a.name.localeCompare(b.name))
+    .map(rowHTML)
+    .join("");
+</script>
+</body>
+</html>

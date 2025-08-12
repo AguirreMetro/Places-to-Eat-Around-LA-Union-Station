@@ -1,0 +1,3 @@
+Heres a list of local recomended spots to eat around LA Union Station. create a word doc listing these out with the title of spot, how long a walk is, if its over 30min walk, then how long the drive is. with how many miles away. a brief description, type of food. closet metro train station and icon of eatery if available
+
+revise where its split into 3 columns. the left side is the title and the right 2 columns are the info subtitle in bold and info subtitle description. . type of food should be first, then below it, description, closest metro station, then below it, walking miles and walking time from metro station to destination. last is drive time. also insclude Spitzz destination

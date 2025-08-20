@@ -166,7 +166,7 @@ function rowHTML(s){
         </div>
       </div>
       <div class="meta-col">
-        ${(s.miles || walk || s.metro) ? `<div class="walk-col">${s.miles ? `<div>${s.miles}</div>` : ''}${walk ? `<div>${walk}${s.metro ? ` from ${s.metro}` : ''}</div>` : (s.metro ? `<div>${s.metro}</div>` : '')}</div>` : ''}
+        ${(s.miles || walk || s.metro) ? `<div class="walk-col">${s.miles ? `<div>${s.miles}</div>` : ''}${walk ? `<div>${walk}${s.metro ? ` from<br> ${s.metro}` : ''}</div>` : (s.metro ? `<div>${s.metro}</div>` : '')}</div>` : ''}
         ${lineLogosHTML(s.metro)}
       </div>
     </div>`;

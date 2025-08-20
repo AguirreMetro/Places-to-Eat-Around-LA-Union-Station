@@ -134,7 +134,9 @@ function starHTML(r){
 
 function walkTime(miles){
   if(miles == null) return null;
-  const mins = Math.round(miles / 3.1 * 60);
+  // round miles to two decimal places to avoid overly precise values
+  const roundedMiles = Math.round(miles * 100) / 100;
+  const mins = Math.round(roundedMiles / 3.1 * 60);
   return `${mins} min walk`;
 }
 

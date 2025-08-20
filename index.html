@@ -28,7 +28,6 @@
   .details-grid .k{font-weight:700;color:var(--muted);text-align:right}
   .meta-col{display:flex;flex-direction:column;align-items:flex-end;text-align:right}
   .walk-col{display:flex;flex-direction:column;align-items:flex-end;font-size:14px;margin-bottom:4px}
-  .walk-col .icon{font-size:20px;line-height:1}
   .lines-col{display:flex;gap:4px;align-items:center;justify-content:flex-end}
   .line-logo{width:32px;height:32px}
   .hdr{display:flex;justify-content:space-between;align-items:center}
@@ -51,7 +50,7 @@
 
   <div class="wrap">
     <h1>Recommended Lunch Spots</h1>
-    <div class="sub">Scan a QR to open Yelp. Order of details: Type, Description, Closest Metro Station. Distance and walk time appear to the right.</div>
+    <div class="sub">Scan a QR to open Yelp. Order of details: Type and Description. Distance, walk time, and nearest station appear to the right.</div>
 
     <div id="list" class="card"></div>
 
@@ -164,11 +163,10 @@ function rowHTML(s){
         <div class="details-grid">
           <div class="k">Type:</div><div>${s.type}</div>
           <div class="k">Description:</div><div>${s.desc}</div>
-          <div class="k">Closest Metro Station:</div><div>${s.metro || 'N/A'}</div>
         </div>
       </div>
       <div class="meta-col">
-        ${(s.miles || walk) ? `<div class="walk-col"><div class="icon">🚶</div>${s.miles ? `<div>${s.miles}</div>` : ''}${walk ? `<div>${walk}</div>` : ''}</div>` : ''}
+        ${(s.miles || walk || s.metro) ? `<div class="walk-col">${s.miles ? `<div>${s.miles}</div>` : ''}${walk ? `<div>${walk}${s.metro ? ` from ${s.metro}` : ''}</div>` : (s.metro ? `<div>${s.metro}</div>` : '')}</div>` : ''}
         ${lineLogosHTML(s.metro)}
       </div>
     </div>`;

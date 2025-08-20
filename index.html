@@ -15,7 +15,7 @@
   h1{margin:10px 0 6px;font-size:28px}
   .sub{color:var(--muted);font-size:14px;margin-bottom:14px}
   .card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
-  .row{display:grid;grid-template-columns:92px 1fr 2fr 80px;gap:16px;align-items:center;padding:14px 16px}
+  .row{display:grid;grid-template-columns:92px 1fr 2fr 80px max-content;gap:16px;align-items:center;padding:14px 16px}
   .row:nth-child(odd){background:var(--rowA)}
   .row:nth-child(even){background:var(--rowB)}
   .qr{width:72px;height:72px;border-radius:10px;border:1px solid var(--line);object-fit:cover;background:#fff}
@@ -27,6 +27,8 @@
   .details-grid .k{font-weight:700;color:var(--muted);text-align:right}
   .walk-col{text-align:center;display:flex;flex-direction:column;align-items:center;font-size:14px}
   .walk-col .icon{font-size:20px;line-height:1}
+  .lines-col{display:flex;gap:4px;align-items:center}
+  .line-logo{width:32px;height:32px}
   .hdr{display:flex;justify-content:space-between;align-items:center}
   .ver{color:#dbe7ff;font-size:12px}
   @media (max-width:820px){
@@ -40,7 +42,7 @@
   <div class="bar">
     <div class="hdr wrap">
       <div>LA Union Station • Lunch Guide</div>
-      <div class="ver">v1.2</div>
+      <div class="ver">v1.3</div>
     </div>
   </div>
 
@@ -58,7 +60,7 @@
 <script>
 const spots = [
   {name:"City Hall Farmers Market", address:"200 N Spring St, Los Angeles, CA", rating:4.0, url:"https://www.yelp.com/biz/city-hall-farmers-market-los-angeles", type:"Various cuisines", desc:"Outdoor market with BBQ, Thai, and Mexican vendors. Wednesdays only.", metro:"Union Station", miles:"0.6 miles"},
-  {name:"Whole Foods", address:"Los Angeles, CA", rating:4.0, url:null, type:"Healthy / Grocery", desc:"Grocery store with salad bar, hot food, and fresh options.", metro:"7th Street / Metro Center", miles:"1 mile", walkMiles:0.2},
+  {name:"Whole Foods", address:"788 S Grand Ave, Los Angeles, CA 90017", rating:4.0, url:null, type:"Healthy / Grocery", desc:"Grocery store with salad bar, hot food, and fresh options.", metro:"7th Street / Metro Center", miles:"1 mile", walkMiles:0.2},
   {name:"Zankou Chicken", address:"611 W 7th St, Los Angeles, CA 90017", rating:4.0, url:"https://www.yelp.com/biz/zankou-chicken-los-angeles-15", type:"Mediterranean", desc:"Famous for Mediterranean chicken plates and wraps.", metro:"7th Street / Metro Center", miles:"1.2 miles", walkMiles:0.05},
   {name:"Jollibee", address:"729 7th St, Los Angeles, CA 90017", rating:4.0, url:"https://www.yelp.com/biz/jollibee-los-angeles-6", type:"Filipino Fast Food", desc:"Fried chicken, spaghetti, and more.", metro:"7th Street / Metro Center", miles:"1.2 miles", walkMiles:0.3},
   {name:"Chick-fil-A", address:"660 S Figueroa St # 2300, Los Angeles, CA 90017", rating:4.0, url:"https://www.yelp.com/biz/chick-fil-a-los-angeles-23", type:"Fast Food", desc:"Chicken sandwiches and nuggets.", metro:"7th Street / Metro Center", miles:"1.2 miles", walkMiles:0.3},
@@ -82,6 +84,16 @@ const spots = [
 
 
 ];
+
+const stationLines = {
+  "Mariachi Plaza Station": ["E"],
+  "Civic Center / Grand Park Station": ["B","D"],
+  "Pershing Square Station": ["B","D"],
+  "Soto Station": ["E"],
+  "7th Street / Metro Center": ["A","B","D","E"],
+  "Little Tokyo / Arts District Station": ["A","E"],
+  "Chinatown Station": ["A"]
+};
 
 function yelpSearchURL(name){
   // Yelp search pointing to Los Angeles; easy to replace with exact business URLs later
@@ -108,6 +120,12 @@ function walkTime(miles){
   return `${mins} min walk`;
 }
 
+function lineLogosHTML(station){
+  const lines = stationLines[station];
+  const logos = lines ? lines.map(l => `<img class="line-logo" src="metro-line-logos/${l.toLowerCase()}-line-logo.png" alt="${l} Line" />`).join("") : "";
+  return `<div class="lines-col">${logos}</div>`;
+}
+
 function rowHTML(s){
   const yelp = s.url || yelpSearchURL(s.name);
   const walk = walkTime(s.walkMiles);
@@ -127,6 +145,7 @@ function rowHTML(s){
         </div>
       </div>
       <div class="walk-col">${(s.miles || walk) ? `<div class="icon">🚶</div>${s.miles ? `<div>${s.miles}</div>` : ''}${walk ? `<div>${walk}</div>` : ''}` : ''}</div>
+      ${lineLogosHTML(s.metro)}
     </div>`;
 }
 
